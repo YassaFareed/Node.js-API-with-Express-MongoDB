@@ -8,7 +8,7 @@ const connectDB = async () => {
         useUnifiedTopology: true  //without these four we will get warnings in console 
     }); //returns a promise 
 
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    console.log(`MongoDB Connected: ${conn.connection.host}`.cyan.underline.bold);
 };
 
 
