@@ -21,6 +21,6 @@
     "nodemon": "^2.0.6"
   },
   "jshintConfig": {
-    "esversion": 6
+    "esversion": 8
   }
 }

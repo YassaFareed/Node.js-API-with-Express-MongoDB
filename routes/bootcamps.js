@@ -5,7 +5,7 @@ const {
     createBootcamp,
     updateBootcamp,
     deleteBootcamp
-} = require('../controllers/bootcamps')
+} = require('../controllers/bootcamps');
 
 const router = express.Router();
 
@@ -18,6 +18,6 @@ router.
     route('/:id')
     .get(getBootcamp)
     .put(updateBootcamp)
-    .delete(deleteBootcamp)
+    .delete(deleteBootcamp);
 
 module.exports = router;// we are exporting from router
