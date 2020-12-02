@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 //const logger = require('./middleware/logger');
 const morgan = require('morgan');
 const colors = require('colors');
+const errHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 
 //load env vars
@@ -28,6 +29,8 @@ if(process.env.NODE_ENV == 'development'){  //only to run on development mode (l
 
 //Mount routes  (into the specific url)
 app.use('/api/v1/bootcamps', bootcamps);
+
+app.use(errHandler);
 
 const PORT = process.env.PORT || 5000; //get on port 5000
 
