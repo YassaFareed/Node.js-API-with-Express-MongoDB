@@ -8,8 +8,17 @@ const Bootcamp = require('../models/Bootcamp'); //now we have our model in which
 // @route   GET /api/v1/bootcamps
 // @access  PUBLIC                      //b/c it doesn't have token 
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
-  
-        const bootcamps = await Bootcamp.find();
+    let query;
+
+    let queryStr = JSON.stringify(req.query);
+
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`); //we added regular expression having gt|gte which indicated greater than or less than etc. that would be used, and match matches this. in to search list, and g indicates global so tat it will look further than just the first one it finds
+    
+   // console.log(queryStr);
+    
+   query = Bootcamp.find(JSON.parse(queryStr));
+
+        const bootcamps = await query;
         res.status(200).json({success: true, count: bootcamps.length, data: bootcamps});
    
 });
