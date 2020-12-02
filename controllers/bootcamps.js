@@ -10,16 +10,47 @@ const Bootcamp = require('../models/Bootcamp'); //now we have our model in which
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
     let query;
 
-    let queryStr = JSON.stringify(req.query);
+    //Copy req.query
+    const reqQuery = {...req.query};
 
+    //Field to exclude
+    const removeFields = ['select','sort']; //as we dont want to match it with the field so we put it here
+
+    //Loop over removeField and delete them from reqQuery
+    removeFields.forEach(param => delete reqQuery[param]);
+
+    //console.log(reqQuery); //this will remove the select (shows {} in output)
+
+    //Create query String
+    let queryStr = JSON.stringify(reqQuery);
+
+    //Create operators ($gt, $gte, etc)
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`); //we added regular expression having gt|gte which indicated greater than or less than etc. that would be used, and match matches this. in to search list, and g indicates global so tat it will look further than just the first one it finds
     
    // console.log(queryStr);
     
+   //Finding resource
    query = Bootcamp.find(JSON.parse(queryStr));
 
-        const bootcamps = await query;
-        res.status(200).json({success: true, count: bootcamps.length, data: bootcamps});
+    //Select fields
+    if(req.query.select){
+        const fields = req.query.select.split(',').join(' ');// this gives the selected key like name description
+        console.log(fields);
+        query = query.select(fields); //this applies select show the selected in postman output
+    }
+    //Sort
+    if(req.query.sort){
+        const sortBy = req.query.sort.split(',').join(' ');// this gives the selected key like name description
+        query = query.sort(sortBy); //this applies select show the selected in postman output
+    }else{
+        query=query.sort('-createdAt'); //descending  sort createdAt attribute present in the model
+    }
+
+   //Executing query
+    const bootcamps = await query;
+       
+    
+    res.status(200).json({success: true, count: bootcamps.length, data: bootcamps});
    
 });
 
