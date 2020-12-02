@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const BootcampSchema = new mongoose.Schema({
     name:{
@@ -32,14 +33,14 @@ const BootcampSchema = new mongoose.Schema({
             'Please add a valid email'
         ]
     },
-   /* address: {
+    address: {
         type: String,
         required: [true, 'Please add an address']
     },
     location: {
         //GeoJSON Point 
         type: {
-            type: String, // Don't do `{ location: { type: String } }`
+            String, // Don't do `{ location: { type: String } }`
             enum: ['Point'], // 'location.type' must be 'Point'
             required: true
           },
@@ -54,7 +55,7 @@ const BootcampSchema = new mongoose.Schema({
           state: String,
           zipcode: String,
           country: String
-    },*/
+    },
     careers: {
         //Array of strings
         type: [String],
@@ -97,9 +98,15 @@ const BootcampSchema = new mongoose.Schema({
         createdAt: {
             type: Date,
             default: Date.now
-        },
-    
+        },    
 });
 
+//Create bootcamp slug from the name
+BootcampSchema.pre('save', function(){
+   // console.log('slugify ran', this.name); //you can check the slug name we get through this in console
+   this.slug = slugify(this.name, { lower: true });
+    next();
+});
 
-module.exports = mongoose.model('Bootcamp', BootcampSchema); //now we can use this model within our controller to fetch data and stuff like that
+module.exports = mongoose.model('Bootcamp', BootcampSchema); 
+//now we can use this model within our controller to fetch data and stuff like that
