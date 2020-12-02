@@ -38,7 +38,7 @@
 		"phone": "(333) 333-3333",
 		"email": "enroll@codemasters.com",
 		"address": "85 South Prospect Street Burlington VT 05405",
-		"careers": ["Web Development", "Data Science", "Business"],
+		"careers": ["Web Development", "Data science", "Business"],
 		"housing": false,
 		"jobAssistance": false,
 		"jobGuarantee": false,
@@ -56,7 +56,7 @@
 		"careers": [
 			"Mobile Development",
 			"Web Development",
-			"Data Science",
+			"Data science",
 			"Business"
 		],
 		"housing": false,
