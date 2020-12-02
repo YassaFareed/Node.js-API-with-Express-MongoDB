@@ -14,7 +14,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     const reqQuery = {...req.query};
 
     //Field to exclude
-    const removeFields = ['select','sort']; //as we dont want to match it with the field so we put it here
+    const removeFields = ['select','sort','page', 'limit']; //as we dont want to match it with the field so we put it here
 
     //Loop over removeField and delete them from reqQuery
     removeFields.forEach(param => delete reqQuery[param]);
@@ -46,11 +46,38 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
         query=query.sort('-createdAt'); //descending  sort createdAt attribute present in the model
     }
 
+    //Pagination  - having limit of 1 means each page would have 1 record because there are 4 records
+    const page = parseInt(req.query.page, 10) || 1; //turns to number and with radix 10, and page 1 as a default if not the first
+    const limit = parseInt(req.query.limit, 10) || 25;
+    const startIndex = (page-1) *limit;
+    const endIndex = page *limit;
+    const total = await Bootcamp.countDocuments(); //counts all the documents
+
+    query = query.skip(startIndex).limit(limit);
+
    //Executing query
     const bootcamps = await query;
+
+    //Pagination result
+    const pagination = {};
+
+    if(endIndex < total){
+        pagination.next = {
+            page: page +1,
+            limit
+        };
+
+    }
+
+    if(startIndex > 0){
+        pagination.prev = {
+            page: page -1,
+            limit
+        };
+    }
        
     
-    res.status(200).json({success: true, count: bootcamps.length, data: bootcamps});
+    res.status(200).json({success: true, count: bootcamps.length, pagination, data: bootcamps});
    
 });
 
