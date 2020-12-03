@@ -14,7 +14,6 @@ exports.getCourses = asyncHandler( async (req, res, next) => {
     }else{
         query = Course.find();
     }
-    console.log('hi');
     //execute query
     const courses = await query;
 
