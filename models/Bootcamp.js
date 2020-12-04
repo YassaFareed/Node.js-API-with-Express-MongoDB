@@ -100,7 +100,11 @@ const BootcampSchema = new mongoose.Schema({
             type: Date,
             default: Date.now
         },    
-});
+}, {
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true}
+}
+);
 
 //Create bootcamp slug from the name
 BootcampSchema.pre('save', function(next){
@@ -128,6 +132,14 @@ BootcampSchema.pre('save', async function(next){
     next();
 });
 
+
+//Reverse populate with virtuals
+BootcampSchema.virtual('courses',{
+    ref: 'Course',
+    localField: '_id',
+    foreignField: 'bootcamp',
+    justOne: false
+});
 
 module.exports = mongoose.model('Bootcamp', BootcampSchema); 
 //now we can use this model within our controller to fetch data and stuff like that
