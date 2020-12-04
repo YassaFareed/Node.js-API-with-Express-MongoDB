@@ -161,11 +161,13 @@ exports.getBootcampsInRadius = asyncHandler(async (req, res, next) => {
 // @access  PRIVATE                     //b/c it doesn't have token 
 exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
 
-    const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id );//we dont need to sent anything so dont need req.body
+    const bootcamp = await Bootcamp.findById(req.params.id );//we dont need to sent anything so dont need req.body
 
     if(!bootcamp){
         return next(new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404));
     }
+
+    bootcamp.remove();
     //res.status(200).json({success:true, msg: `Update bootcamp ${req.params.id}`});
     res.status(200).json({success: true, data: {}});
     
